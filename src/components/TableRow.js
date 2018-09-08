@@ -7,7 +7,6 @@ class TableRow extends Component {
         super(props)
 
         this.state = {
-            isOpen: false,
             isEditing: false
         };
 
@@ -21,18 +20,32 @@ class TableRow extends Component {
 
     render() {
         return (
-            <div className='row' onClick={this.toggleDisplayFullness}>
-                {
-                    this.state.isOpen ? this.fullView : this.briefView
-                }
+            <div className={['row', this.props.isOpen ? ' row_state_open' : ''].join("")}
+                onClick={this.toogleInfo}>
+                    { this.props.isOpen ? this.fullView : this.briefView }
             </div>
         )
     }
 
-    // чуть позде отменить всплытие
-    // componentDidMount() {
-    //     ReactDOM.findDOMNode(this).addEventListener('click', this.toggleDisplayFullness);
-    // }
+    componentWillReceiveProps(nextProps) {
+        //загрузим данные с сервера
+        nextProps.isOpen && this.getFullView();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // почитать про pureComponent
+        return this.props.isOpen !== nextProps.isOpen;
+    }
+
+    toogleInfo = () => {
+        !this.props.isOpen && this.props.changeActiveRow();
+    }
+
+    getFullView = () => {
+        this.fullView = this.createRowCells(this.getFullData(), true);
+    }
+
+    getFullData = () => (this.fullData = Object.assign(this.briefData, { width: '120m', height: '30m' }))
 
     createRowCells = (data, hasTools) => {
         return [
@@ -42,40 +55,18 @@ class TableRow extends Component {
                 </div>
             ),
             // что делаеть с key? выбрасывает без него ошибку если массив
-            hasTools && <button key={Object.keys(data).length} onClick={this.openEditForm}>edit</button>
+            hasTools && [
+                <button key={Object.keys(data).length} onClick={this.openEditForm}>edit</button>,
+                <button key={Object.keys(data).length + 1} onClick={this.props.changeActiveRow}>close</button>
+            ]
         ]
     }
 
-    // какое карсивое название функции:) поменять
-    toggleDisplayFullness = (e) => {
-        // в форме EditForm сгенерить событие закрытия формы и тут словить еге. проверить на тагет/тип и закрыть форму
-        // тут надо асинхронно поиграться, set state асинхронный, дернуть спинер а потом Promise.All от данных и сет стэйт?
-        if(!this.state.isOpen) {
-            this.fullView = this.createRowCells(this.getFullInfo(), true);
-
-            this.setState({
-                isOpen: true
-            })
-        }
-    }
-
-    //здесь ходим якобы за полными данными на бэк
-    getFullInfo = () => (this.fullData = Object.assign(this.briefData, { width: '120m', height: '30m' }))
-
     openEditForm = () => {
-        this.setState({
-            isEditing: true
-        })
-        // this.fullView = Object.keys(this.fullData).map((prop, i) => this.createFormCell(prop, this.fullData[prop]))
         this.fullView = <EditForm data={this.fullData}/>
+
+        this.forceUpdate();
     }
 };
 
 export default TableRow;
-
-
-// componentDidMount() {
-//     ReactDOM.findDOMNode(this).addEventListener('click', (event) => {
-//       event.stopPropagation();
-//     }, false);
-//   }
