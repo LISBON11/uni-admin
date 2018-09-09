@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Tools from './Tools'
+import FormField from './FormField'
 import typeConfig from '../data-config'
 
 class EditForm extends Component {
@@ -10,10 +11,6 @@ class EditForm extends Component {
 
         this.state = {};
         this.state.form = Object.assign(this.data);
-        // this.state = Object.keys(this.data).reduce((acc, key) => {
-        //     acc[key] = this.data[key];
-        //     return
-        // }, {});
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -27,7 +24,7 @@ class EditForm extends Component {
         return (
             <form className='edit-form'
                 onSubmit={this.handleSubmit}
-                ref={ form => this.form = form }>
+                ref='form'>
                     {fields}
                     <Tools actions={Object.assign(this.props.actions, { clearForm: this.clearForm})}/>
             </form>
@@ -40,13 +37,16 @@ class EditForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submit!')
+
+        this.refs.form.reset();
     }
 
     handleChange = (e) => {
-        console.log('Change!', e.target.value, e.target.name);
-        // this.state[this.fieldName] = e.target.value;
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({
+            form: {
+                [e.target.name]: e.target.value
+            }
+        })
     }
 
     createFormCell = (fieldName, value, key) => {
@@ -57,6 +57,7 @@ class EditForm extends Component {
                 return <input key={key}
                             value={this.state.form[fieldName]}
                             onChange={this.handleChange}
+                            ref='name'
                             name={fieldName}/>
             }
             case 'select': {
@@ -75,8 +76,15 @@ class EditForm extends Component {
     }
 
     clearForm = (e) => {
-        console.log('clearForm')
-        this.form.reset();
+        const clearFormState = Object.keys(this.state.form).reduce((acc, key) => {
+            acc[key] = '';
+
+            return acc;
+        }, {});
+
+        this.setState({
+            form: clearFormState
+        });
     }
 }
 
