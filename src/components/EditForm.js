@@ -23,8 +23,7 @@ class EditForm extends Component {
 
         return (
             <form className='edit-form'
-                onSubmit={this.handleSubmit}
-                ref='form'>
+                onSubmit={this.handleSubmit}>
                     {fields}
                     <Tools actions={Object.assign(this.props.actions, { clearForm: this.clearForm})}/>
             </form>
@@ -37,8 +36,6 @@ class EditForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
-        this.refs.form.reset();
     }
 
     handleChange = (e) => {
@@ -57,7 +54,6 @@ class EditForm extends Component {
                 return <input key={key}
                             value={this.state.form[fieldName]}
                             onChange={this.handleChange}
-                            ref='name'
                             name={fieldName}/>
             }
             case 'select': {
