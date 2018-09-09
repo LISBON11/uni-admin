@@ -9,78 +9,34 @@ class EditForm extends Component {
 
         this.data = this.props.data;
 
-        this.state = {};
-        this.state.form = Object.assign(this.data);
+        this.formFields = [];
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
-        const fields = Object.keys(this.data).map((field, i) =>
-            this.createFormCell(field, this.data[field], i)
+        const formFields = Object.keys(this.data).map((fieldName, i) =>
+            <FormField key={i}
+                fieldName={fieldName}
+                value={this.data[fieldName]}
+                ref={instance => this.formFields.push(instance)}/>
         );
 
         return (
             <form className='edit-form'
                 onSubmit={this.handleSubmit}>
-                    {fields}
+                    {formFields}
                     <Tools actions={Object.assign(this.props.actions, { clearForm: this.clearForm})}/>
             </form>
         )
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
     }
 
-    handleChange = (e) => {
-        this.setState({
-            form: {
-                [e.target.name]: e.target.value
-            }
-        })
-    }
-
-    createFormCell = (fieldName, value, key) => {
-        const fieldConfig = typeConfig[fieldName];
-
-        switch (fieldConfig && fieldConfig.type) {
-            case 'input': {
-                return <input key={key}
-                            value={this.state.form[fieldName]}
-                            onChange={this.handleChange}
-                            name={fieldName}/>
-            }
-            case 'select': {
-                return (
-                    <select key={key}
-                        value={this.state.form[fieldName]}
-                        onChange={this.handleChange}>
-                            {fieldConfig.values.map((val, i) => <option key={i}>{val}</option>)}
-                    </select>
-                )
-            }
-            default: {
-                return value;
-            }
-        }
-    }
-
     clearForm = (e) => {
-        const clearFormState = Object.keys(this.state.form).reduce((acc, key) => {
-            acc[key] = '';
-
-            return acc;
-        }, {});
-
-        this.setState({
-            form: clearFormState
-        });
+        this.formFields.forEach(field => field.clearField())
     }
 }
 

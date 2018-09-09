@@ -11,7 +11,7 @@ class App extends Component {
 
     render() {
         return (
-            <View type='table' data={this.data}/>
+            <View data={this.data}/>
         )
     }
 };

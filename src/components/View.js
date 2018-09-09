@@ -8,16 +8,14 @@ class View extends Component {
     }
 
     render() {
-        const {data} = this.props;
+        const data = this.props.data;
 
         return this.state.displayType === 'table' ? <TableView data={data}/> : <MapView data={data}/>
     }
 
-    toggleDisplayMode = () => {
-        this.setState({
-            displayType: 'map'
-        })
-    };
+    toggleDisplayMode = () => this.setState({
+        displayType: this.state.displayType === 'map' ? 'table' : 'map'
+    })
 };
 
 export default View;
