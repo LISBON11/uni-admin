@@ -14,7 +14,7 @@ export default[
     {
         id: '2',
         name: 'третий',
-        owner: 'me',
+        owner: 'Vasya',
         price: '50'
     }
 ];

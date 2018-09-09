@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import EditForm from './EditForm'
+import Tools from './Tools'
 import ReactDOM from 'react-dom'
 
 class TableRow extends Component {
@@ -29,7 +30,7 @@ class TableRow extends Component {
 
     componentWillReceiveProps(nextProps) {
         //загрузим данные с сервера
-        nextProps.isOpen && this.getFullView();
+        nextProps.isOpen && this.createFullView();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -41,29 +42,29 @@ class TableRow extends Component {
         !this.props.isOpen && this.props.changeActiveRow();
     }
 
-    getFullView = () => {
-        this.fullView = this.createRowCells(this.getFullData(), true);
+    createFullView = () => {
+        // переделать без массива на () чтобы убрать key;
+        this.fullView = [
+            this.createRowCells(this.getFullData()),
+            <Tools key='1' actions={{edit: this.openEditForm, close: this.props.changeActiveRow}}/>
+        ]
     }
 
     getFullData = () => (this.fullData = Object.assign(this.briefData, { width: '120m', height: '30m' }))
 
-    createRowCells = (data, hasTools) => {
-        return [
-            Object.keys(data).map((prop, i) =>
-                <div key={i} className='row__cell'>
-                    {data[prop]}
-                </div>
-            ),
-            // что делаеть с key? выбрасывает без него ошибку если массив
-            hasTools && [
-                <button key={Object.keys(data).length} onClick={this.openEditForm}>edit</button>,
-                <button key={Object.keys(data).length + 1} onClick={this.props.changeActiveRow}>close</button>
-            ]
-        ]
+    createRowCells = (data) => {
+        return Object.keys(data).map((prop, i) =>
+            <div key={i} className='row__cell'>
+                {data[prop]}
+            </div>
+        )
     }
 
     openEditForm = () => {
-        this.fullView = <EditForm data={this.fullData}/>
+        this.fullView = <EditForm
+            data={this.fullData}
+            actions={{ close: this.props.changeActiveRow }}
+        />;
 
         this.forceUpdate();
     }
