@@ -10,8 +10,6 @@ class EditForm extends Component {
         this.data = this.props.data;
 
         this.formFields = [];
-
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     render() {

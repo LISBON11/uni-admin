@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import EditForm from './EditForm'
 import Tools from './Tools'
-import ReactDOM from 'react-dom'
 
 class TableRow extends Component {
     constructor(props) {
@@ -33,7 +32,7 @@ class TableRow extends Component {
         nextProps.isOpen && this.createFullView();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         // почитать про pureComponent
         return this.props.isOpen !== nextProps.isOpen;
     }

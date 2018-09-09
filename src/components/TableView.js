@@ -26,7 +26,7 @@ class TableView extends Component {
     }
 
     changeActiveRow = rowId =>
-        this.setState({openRowId: this.state.openRowId === rowId ? null : rowId})
+        this.setState(state => ({ openRowId: state.openRowId === rowId ? null : rowId }))
 };
 
 export default TableView;

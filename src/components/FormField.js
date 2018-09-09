@@ -11,8 +11,6 @@ class FormField extends Component {
         this.state = {
             value: this.props.value
         };
-
-        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {

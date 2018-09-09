@@ -13,9 +13,9 @@ class View extends Component {
         return this.state.displayType === 'table' ? <TableView data={data}/> : <MapView data={data}/>
     }
 
-    toggleDisplayMode = () => this.setState({
-        displayType: this.state.displayType === 'map' ? 'table' : 'map'
-    })
+    toggleDisplayMode = () => this.setState(state => ({
+        displayType: state.displayType === 'map' ? 'table' : 'map'
+    }))
 };
 
 export default View;
