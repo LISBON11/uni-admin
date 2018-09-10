@@ -8,9 +8,10 @@ class View extends Component {
     }
 
     render() {
-        const data = this.props.data;
+        const data = this.props.data
+        const ViewComponent = this.state.displayType === 'table' ? TableView : MapView
 
-        return this.state.displayType === 'table' ? <TableView data={data}/> : <MapView data={data}/>
+        return <ViewComponent data={data}/>
     }
 
     toggleDisplayMode = () => this.setState(state => ({

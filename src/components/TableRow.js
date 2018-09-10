@@ -4,11 +4,7 @@ import Tools from './Tools'
 
 class TableRow extends Component {
     constructor(props) {
-        super(props)
-
-        this.state = {
-            isEditing: false
-        };
+        super(props);
 
         this.briefData = this.props.data;
         this.briefView = this.createRowCells(this.briefData);
@@ -20,7 +16,7 @@ class TableRow extends Component {
 
     render() {
         return (
-            <div className={['row', this.props.isOpen ? ' row_state_open' : ''].join("")}
+            <div className={['row', this.props.isOpen ? ' row_state_open' : ''].join('')}
                 onClick={this.toogleInfo}>
                     { this.props.isOpen ? this.fullView : this.briefView }
             </div>

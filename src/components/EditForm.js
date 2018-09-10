@@ -35,6 +35,11 @@ class EditForm extends Component {
 
     clearForm = (e) => {
         this.formFields.forEach(field => field.clearField())
+        // const data = {};
+        // Object.keys(this.state.data).forEach((fieldName, i) =>
+        //     data[fieldName] = null);
+
+        // this.setState(data);
     }
 }
 
