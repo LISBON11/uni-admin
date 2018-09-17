@@ -1,28 +1,41 @@
 import React, {Component} from 'react';
 import View from './View';
-import data from '../data/boards';
-import connect from 'react-redux';
+import {connect} from 'react-redux';
 
 
 class App extends Component {
-    componentWillMount() {
-        // сходили за данными
-        this.data = data
+    constructor(props) {
+        super(props);
 
+        this.onLoad = this.props.onLoad;
+    }
+
+    componentDidMount() {
+        // тут надо сходить за всей датой для странички
         fetch('/api/get/boards')
             .then(res => res.json())
-            // .then(res => res.json())
-            .then(users => console.log('users', users))
+            .then(boards => this.onLoad(boards))
             .catch(console.error);
     }
 
-    // componentDidMount
-
     render() {
         return (
-            <View data={this.data}/>
+            <View data={this.props.boards}/>
         )
     }
 };
+function mapSetToProps(store) {
+    return {
+        boards: store.boards
+    };
+}
 
-export default App;
+function matchDispatchToProps(dispatch) {
+    return {
+        onLoad: (boards) => {
+            dispatch({ type: 'LOAD', payload: boards})
+        }
+    }
+}
+
+export default connect(mapSetToProps, matchDispatchToProps)(App);

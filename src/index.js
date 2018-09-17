@@ -1,16 +1,15 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import allReducers from './reducers'
 import App from './components/App';
-import {Provider} from 'react-redux';
-import {createStore} from 'redux';
 
-const testFn = function(state = [], action) {
-    // console.log(store.getStore())
+const store = createStore(allReducers)
 
-    return [];
-}
-
-const store = createStore(testFn)
+store.subscribe((() => {
+    console.log('subscribe', store.getState())
+}))
 
 render(
     <Provider store={store}>

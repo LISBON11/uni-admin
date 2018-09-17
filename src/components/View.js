@@ -3,9 +3,17 @@ import TableView from './TableView'
 import MapView from './MapView'
 
 class View extends Component {
-    state = {
-        displayType: 'table'
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            displayType: 'table'
+        };
+
+        this.onAdd = this.props.onAdd;
     }
+
+
 
     render() {
         const data = this.props.data
@@ -19,4 +27,18 @@ class View extends Component {
     }))
 };
 
-export default View;
+function mapSetToProps(store) {
+    return {
+        boards: store.boards
+    };
+}
+
+function matchDispatchToProps(dispatch) {
+    return {
+        onAdd: (row) => {
+            dispatch({ type: 'ADD', payload: row})
+        }
+    }
+}
+
+export default connect(mapSetToProps, matchDispatchToProps)(View);
