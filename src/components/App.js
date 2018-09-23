@@ -19,11 +19,10 @@ class App extends Component {
     }
 
     render() {
-        return (
-            <View data={this.props.boards}/>
-        )
+        return <View/>
     }
 };
+
 function mapSetToProps(store) {
     return {
         boards: store.boards

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import TableRow from './TableRow';
+import {connect} from 'react-redux';
+
 
 class TableView extends Component {
     state = {
@@ -8,25 +10,28 @@ class TableView extends Component {
     }
 
     render() {
-        const {data} = this.props;
+        const dataKeys = Object.keys(this.props.boards);
 
         return (
             <div className='table'>
-                {
-                    data.map((row, i) =>
-                        <TableRow key = {i}
-                            data = {row}
-                            isOpen = {this.state.openRowId === row.id}
-                            changeActiveRow = {this.changeActiveRow.bind(this, row.id)}
-                        />
-                    )
-                }
+                { dataKeys.map(key => <TableRow key={key} id={key}/>)}
             </div>
         )
     }
-
-    changeActiveRow = rowId =>
-        this.setState(state => ({ openRowId: state.openRowId === rowId ? null : rowId }))
 };
 
-export default TableView;
+function mapSetToProps(store) {
+    return {
+        boards: store.boards
+    };
+}
+
+function matchDispatchToProps(dispatch) {
+    return {
+        onLoad: (boards) => {
+            dispatch({ type: 'LOAD', payload: boards})
+        }
+    }
+}
+
+export default connect(mapSetToProps, matchDispatchToProps)(TableView);

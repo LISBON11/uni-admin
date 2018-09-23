@@ -22,7 +22,19 @@ MongoClient.connect('mongodb://localhost:27017', function(err, database) {
 
 app.get('/api/get/boards', (req, res) => {
     db.collection('boards').find().toArray()
-        .then(docs => res.send(docs))
+        .then(docs => {
+            const result = docs.reduce((acc, doc) => {
+                const docId = doc._id;
+
+                delete doc._id;
+
+                acc[docId] = doc;
+
+                return acc;
+            }, {})
+
+            res.send(result)
+        })
         .catch(console.error)
 
     // db.collection('boards').insert({ name: 'Lizika'}, (err, res) => {

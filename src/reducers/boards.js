@@ -1,4 +1,4 @@
-export default function(store = [], action) {
+export default function(store = {}, action) {
     // console.log('action!!', action)
 
     switch(action.type) {
@@ -10,9 +10,7 @@ export default function(store = [], action) {
         }
         case 'LOAD': {
             console.log('WE ARE HERE!!!')
-            return [
-                ...action.payload
-            ]
+            return Object.assign(action.payload)
         }
 
         default: return store;

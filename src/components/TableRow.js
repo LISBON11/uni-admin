@@ -1,40 +1,54 @@
 import React, {Component} from 'react'
 import EditForm from './EditForm'
 import Tools from './Tools'
+import {connect} from 'react-redux';
+
 
 class TableRow extends Component {
     constructor(props) {
         super(props);
 
-        this.briefData = this.props.data;
+        this.id = this.props.id;
+
+        this.briefData = this.props.boards[this.id];
+
+        // console.log(this.briefData)
         this.briefView = this.createRowCells(this.briefData);
 
         // ?? да, можноне писать нул, но вроде так наглядно по полям пока нет jsdoc
         this.fullData = null;
         this.fullView = null;
+
+        this.isOpen = false;
     }
 
     render() {
+        this.isOpen = this.props.activeRowId === this.id;
+
         return (
-            <div className={['row', this.props.isOpen ? ' row_state_open' : ''].join('')}
+            <div className={['row', this.isOpen ? ' row_state_open' : ''].join('')}
                 onClick={this.toogleInfo}>
                     { this.props.isOpen ? this.fullView : this.briefView }
             </div>
         )
     }
 
-    componentWillReceiveProps(nextProps) {
-        //загрузим данные с сервера
-        nextProps.isOpen && this.createFullView();
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     //загрузим данные с сервера
+    //     nextProps.isOpen && this.createFullView();
+    // }
 
     shouldComponentUpdate(nextProps) {
-        // почитать про pureComponent
-        return this.props.isOpen !== nextProps.isOpen;
+        const fromOpentoClose = this.isOpen && (nextProps.activeRowId !== this.id);
+        const fromCloseToOpen = nextProps.activeRowId === this.id;
+
+        return fromOpentoClose || fromCloseToOpen;
     }
 
     toogleInfo = () => {
-        !this.props.isOpen && this.props.changeActiveRow();
+        const newActiveId = (this.id === this.props.activeRowId) ? null : this.id;
+
+        this.props.changeActiveRow(newActiveId)
     }
 
     createFullView = () => {
@@ -65,4 +79,19 @@ class TableRow extends Component {
     }
 };
 
-export default TableRow;
+function mapSetToProps(store) {
+    return {
+        boards: store.boards,
+        activeRowId: store.tableRow
+    };
+}
+
+function matchDispatchToProps(dispatch) {
+    return {
+        changeActiveRow: (id) => {
+            dispatch({ type: 'CHANGE_ACTIVE_ROW', payload: id})
+        },
+    }
+}
+
+export default connect(mapSetToProps, matchDispatchToProps)(TableRow);

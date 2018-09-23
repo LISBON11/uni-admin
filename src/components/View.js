@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import TableView from './TableView'
 import MapView from './MapView'
+import {connect} from 'react-redux';
+
 
 class View extends Component {
     constructor(props) {
@@ -13,13 +15,10 @@ class View extends Component {
         this.onAdd = this.props.onAdd;
     }
 
-
-
     render() {
-        const data = this.props.data
         const ViewComponent = this.state.displayType === 'table' ? TableView : MapView
 
-        return <ViewComponent data={data}/>
+        return <ViewComponent/>
     }
 
     toggleDisplayMode = () => this.setState(state => ({
